@@ -1,0 +1,22 @@
+Our task is to kill pig/pigs which is/are protected by a structure composed of different building blocks.  
+The structure can be destroyed by shooting the angry birds on it. 
+Our task is to maximise the score which can be obtained by using fewer birds and destroying more objects (including pigs). 
+This can be done by hitting the appropriate portion of the structure.
+One approach to solve a game is to analyse its structure. A qualitative spatial reasoning approach can be used for this task. 
+Rectangle Algebra (RA) which is an extension of Interval Algebra (IA) can be used to develop relations between the structures.
+Both are similar except that in Rectangle Algebra the basic objects are rectangles. However the basic object in IA is line.
+Our primary aim is that the pigs should be reachable from the birds directly or indirectly.
+A bird hitting an object O of a structure is reachable to the pigs if the object O directly or indirectly supports or shelters the pig. 
+Hence what we need is to find the supporting and sheltering structures of a pig. 
+In other words, we need to separate the supporting structure of the pig from the entire structure which is often very large. 
+The direct supported of the pig can be found by making a rule using RA relations. 
+Using the rule, we can further get the supporters of the supporters.
+This way we can collect all direct and indirect supporters of the pig. 
+Similarly, a direct or an indirect sheltering structure can be found. 
+A sheltering structure consists of closest objects of a pig that can protect a pig from a direct hit. 
+Specifically, an immediate sheltering structure contains its left, right and roof sheltering objects.
+Now, to estimate the best hit a score is assigned to objects which are directly reachable to the angry bird. 
+The scoring method is defined as:
+1 point is added if the affected objects belongs to a supporting or a sheltering structure of a pig.
+10 points added if the affected object is itself a pig.
+In this way a score is assigned to directly reachable objects to the angry bird and the one with maximum score would be the target.
