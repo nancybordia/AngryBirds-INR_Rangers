@@ -1,8 +1,0 @@
-Initially, we were using extended interval algebra for finding which objects are reachable directly to the bird but we were not getting exact results. 
-Now, we will make list of reachable objects by considering trajectory list. We will find trajectory for centre of object, top of object and bottom of object. 
-If all 3 lists are empty, object will be classified as unreachable.
-From the list of reachable objects, one by one we will calculate heuristic value of all by making list of their supporters and supportees and checking their stability by rules of EIA after the target is hit. 
-Object with highest heuristic value will be our target object.
-Stability will be determined by rules of EIA.The direct consequence will be in three types which are destroyed, falling and remaining stable.
-Empirically, the way to determine the consequence of the hit depends on the height and width ratio of the target.
-
