@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 /**
- * Created by Nancy on 9/27/2014.
+ * Created by Nancy on 9/27/2014
  */
 public class Algebra {
     public boolean isB(ABObject x,ABObject y){
