@@ -1,8 +1,10 @@
 package ab.vision;
 
 import ab.demo.other.ActionRobot;
+import ab.demo.other.SelectObject;
 import ab.demo.other.Shot;
 import ab.planner.TrajectoryPlanner;
+import ab.vision.real.shape.Rect;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -63,6 +65,8 @@ public class Heuristic {
                 supporters.add(y);
 
             }
+            if(isAngularSupport(x,y))
+                supporters.add(y);
         }
             return supporters;
     }
@@ -74,9 +78,13 @@ public class Heuristic {
                 supportees.add(y);
 
             }
+            if(isAngularSupport(y,x)){
+                supportees.add(y);
+            }
         }
         return supportees;
     }
+
 
     public static boolean isSupport(ABObject a,ABObject b){
        Algebra algebra=new Algebra();
@@ -85,13 +93,62 @@ public class Heuristic {
         else return false;
     }
 
+    public static boolean isAngularSupport(ABObject a,ABObject b){
+        if (a.IsAngular() && a.shape == ABShape.Rect && !isSupport(a, b) && b.shape == ABShape.Rect
+                && a.getType() != ABType.Pig && b.getType() != ABType.Pig)
+        {
+            Rect rect = (Rect)a;
+            Rect rect1 = (Rect)b;
+            int[] yPoints = rect.p.ypoints;
+            int maxY = 0;
+            int x = 0;
+            int secondY = 0;
+            int secondX = 0;
+
+            // Find lower edge
+            for (int i = 0; i < yPoints.length; i++)
+            {
+                if (yPoints[i] > maxY)
+                {
+                    maxY = yPoints[i];
+                    x = rect.p.xpoints[i];
+                }
+            }
+            for (int i = 0; i < yPoints.length; i++)
+            {
+                int pX = rect.p.xpoints[i];
+                int pY = yPoints[i];
+                int vecX = pX - x;
+                int vecY = pY - maxY;
+                double distance = Math.sqrt(Math.pow(vecX, 2) + Math.pow(vecY, 2));
+                if (distance == rect.getpLength())
+                {
+                    secondX = pX;
+                    secondY = pY;
+                    break;
+                }
+            }
+
+            // Get Line equation of lower edge
+            // and check if any points of the other rectangle
+            // are contact with this line, if yes add to list
+            LineEquation lines =Equations.lineEqCompute(x, maxY, secondX, secondY);
+            List<LineEquation> lineList = new ArrayList<LineEquation>();
+            lineList.add(lines);
+            boolean cr = Stability.CheckLineEquations(rect1.p.xpoints, rect1.p.ypoints, lineList);
+            if (cr)
+                return true;
+        }
+        return false;
+    }
+
     public static List<ABObject> getallSupportees(ABObject x, List<ABObject> obj){
         List<ABObject> directSupportees=getSupportees(x, obj);
         List<ABObject> allsupportees= new ArrayList<ABObject>();
         if(!allsupportees.containsAll(directSupportees))
         allsupportees.addAll(directSupportees);
         for(ABObject o:directSupportees){
-            getallSupporters(o,obj);
+            getallSupportees(o,obj);
         }
         return allsupportees;
     }
@@ -112,8 +169,8 @@ public class Heuristic {
         List<ABObject> neighbours=new ArrayList<ABObject>();
         List<ABObject> left=getLeftObjects(x,obj);
         List<ABObject> right=getRightObjects(x,obj);
-        neighbours.addAll(getClosestLeft(left));
-        //neighbours.addAll(getClosestRight(right));
+       // neighbours.addAll(getClosestLeft(left));
+        neighbours.addAll(getClosestRight(right));
         return neighbours;
     }
 
@@ -209,9 +266,9 @@ public class Heuristic {
         }
     }
 
-    public static boolean isReachable(Vision vision,Point target,Shot shot){
+   // public static boolean isReachable(Vision vision,Point target,Shot shot){
        // System.out.println("hi");
-        TrajectoryPlanner tp = new TrajectoryPlanner();
+      /*  TrajectoryPlanner tp = new TrajectoryPlanner();
         Point releasePoint = new Point(shot.getX()+shot.getDx(),shot.getY()+shot.getDy());
         int trajY=tp.getYCoordinate(vision.findSlingshotMBR(),releasePoint,target.x);
         //if (Math.abs(trajY - target.y) > 100)
@@ -223,20 +280,16 @@ public class Heuristic {
         List<Point> points = tp.predictTrajectory(vision.findSlingshotMBR(),
                 releasePoint);
         for (Point point : points) {
-            if (point.x < 840 && point.y < 480 && point.y > 100
-                    && point.x > 400)
                 for (ABObject ab : vision.findBlocksMBR()) {
-                    if (((ab.contains(point) && !ab.contains(target)) || Math
-                            .abs(vision.getMBRVision()._scene[point.y][point.x] - 72) < 10)
-                            && point.x < target.x)
+                    if (((ab.contains(point) && !ab.contains(target))))
                         return false;
                 }
 
         }
         //System.out.println(result);
-        return result;
+        return result;*/
 
-    }
+    //}
 
     public static int getHeuristicValue(ABObject obj)
     {
@@ -277,18 +330,20 @@ public class Heuristic {
         Vision vision = new Vision(screenshot);
         List<ABObject> blocks=vision.findBlocksMBR();
 
-        //System.out.println(blocks.size());
+        System.out.println("No. of blocks:"+blocks.size());
         Shot shot=new Shot();
-        List<ABObject> reachable=new ArrayList<ABObject>();
-        for(ABObject o:blocks){
-            Point target1=o.getCenter();
-            Point target2=o.getTop();
-            if(isReachable(vision,target1,shot)||isReachable(vision,target2,shot)){
-              reachable.add(o);
-            }
-        }
-        //System.out.println("No of blocks reachable:" + reachable.size());
-        for(ABObject o:reachable){
+        SelectObject reachable=new SelectObject();
+        List<ABObject> reachableObj=reachable.getReachableObjects();
+        //List<ABObject> reachable=new ArrayList<ABObject>();
+       // for(ABObject o:blocks){
+         //   Point target1=o.getCenter();
+         //   Point target2=o.getTop();
+          //  if(isReachable(vision,target1,shot)){
+           //   reachable.add(o);
+           // }
+        //}
+        System.out.println("No of blocks reachable:" + reachableObj.size());
+        for(ABObject o:reachableObj){
                 //if (o.getType()==ABType.Stone) {
                    // return o;
                // }
