@@ -60,6 +60,7 @@ public class Heuristic {
     //}
    public static List<ABObject> getSupporters(ABObject x , List<ABObject> obj){
         List<ABObject> supporters=new ArrayList<ABObject>();
+     //  supporters.add(x);
         for (ABObject y:obj) {
             if (isSupport(x, y)) {
                 supporters.add(y);
@@ -73,6 +74,7 @@ public class Heuristic {
 
     public static List<ABObject> getSupportees(ABObject x , List<ABObject> obj){
         List<ABObject> supportees=new ArrayList<ABObject>();
+       // supportees.add(x);
         for (ABObject y:obj) {
             if (isSupport(y, x)) {
                 supportees.add(y);
@@ -149,6 +151,7 @@ public class Heuristic {
         allsupportees.addAll(directSupportees);
         for(ABObject o:directSupportees){
             getallSupportees(o,obj);
+            //getallSupporters(o,obj);
         }
         return allsupportees;
     }
@@ -160,6 +163,7 @@ public class Heuristic {
             allsupporters.addAll(directSupporters);
         for(ABObject o:directSupporters){
             getallSupporters(o,obj);
+           // getallSupportees(o,obj);
         }
         return allsupporters;
     }
@@ -266,6 +270,62 @@ public class Heuristic {
         }
     }
 
+    public static List<ABObject> getReachable(){
+        List<ABObject> reachable= new ArrayList<ABObject>();
+        BufferedImage screenshot=ActionRobot.doScreenShot();
+        Vision vision=new Vision(screenshot);
+        Rectangle sling = vision.findSlingshotMBR();
+        for(ABObject o:vision.findBlocksMBR()){
+            if(isReachable(o.getCenter())!=3)
+                reachable.add(o);
+        }
+        return reachable;
+    }
+
+    public static int isReachable(Point target)
+    {
+        TrajectoryPlanner trajectoryPlanner=new TrajectoryPlanner();
+        boolean result1 = true;
+        boolean result2=true;
+        BufferedImage screenshot=ActionRobot.doScreenShot();
+        Vision vision=new Vision(screenshot);
+        Rectangle sling = vision.findSlingshotMBR();
+        Point releasePoint0 = trajectoryPlanner.getReleasePoint0(target, sling);
+        Point releasePoint1 = trajectoryPlanner.getReleasePoint0(target, sling);
+        List<Point> points0 = trajectoryPlanner.predictTrajectory(sling, releasePoint0);
+        List<Point> points1 = trajectoryPlanner.predictTrajectory(sling, releasePoint1);
+
+        //int counter = 10;
+        for(Point point: points0 )
+        {
+            if(/*(counter++)%3 == 0 &&*/ point.y < 480 && point.x < 840 && point.y > 100 && point.x > 400)
+                for(ABObject ab: vision.findBlocksMBR())
+                {
+                    if( ((ab.contains(point) && !ab.contains(target))||Math.abs(vision.getMBRVision()._scene[point.y][point.x] - 72 ) < 10)
+                            && point.x < target.x
+                            )
+                        result1= false;
+                }
+
+        }
+        for(Point point: points1 )
+        {
+            if(/*(counter++)%3 == 0 &&*/ point.y < 480 && point.x < 840 && point.y > 100 && point.x > 400)
+                for(ABObject ab: vision.findBlocksMBR())
+                {
+                    if( ((ab.contains(point) && !ab.contains(target))||Math.abs(vision.getMBRVision()._scene[point.y][point.x] - 72 ) < 10)
+                            && point.x < target.x
+                            )
+                        result2= false;
+                }
+
+        }
+        if(result1)
+            return 0;
+        if(result2)return 1;
+        return 3;
+    }
+
    // public static boolean isReachable(Vision vision,Point target,Shot shot){
        // System.out.println("hi");
       /*  TrajectoryPlanner tp = new TrajectoryPlanner();
@@ -316,7 +376,7 @@ public class Heuristic {
             {
                 h += 10;
             }
-            else
+            else if(o.getType()!=ABType.Hill)
             {
                 h += 1;
             }
@@ -328,12 +388,22 @@ public class Heuristic {
         ABObject target=new ABObject();
         BufferedImage screenshot = ActionRobot.doScreenShot();
         Vision vision = new Vision(screenshot);
+        List<ABObject> blocksreal=vision.findBlocksRealShape();
         List<ABObject> blocks=vision.findBlocksMBR();
-
-        System.out.println("No. of blocks:"+blocks.size());
+//        for (ABObject o:blocks)
+//        {
+//            if (o.getType() == ABType.Stone)
+//                blocks.remove(o);
+//        }
+        //for(ABObject t:blocks)
+        //System.out.println("object id: "+t.id+" object type : "+t.type+" object shape : "+t.shape );
+        //System.out.println("No. of blocks:"+blocks.size());
         Shot shot=new Shot();
-        SelectObject reachable=new SelectObject();
-        List<ABObject> reachableObj=reachable.getReachableObjects();
+        //SelectObject reachable=new SelectObject();
+        //List<ABObject> reachableObj=getReachable();
+       // for(ABObject t:reachableObj)
+        //System.out.println("reachable:" +reachableObj.size() );
+
         //List<ABObject> reachable=new ArrayList<ABObject>();
        // for(ABObject o:blocks){
          //   Point target1=o.getCenter();
@@ -342,23 +412,39 @@ public class Heuristic {
            //   reachable.add(o);
            // }
         //}
-        System.out.println("No of blocks reachable:" + reachableObj.size());
-        for(ABObject o:reachableObj){
-                //if (o.getType()==ABType.Stone) {
-                   // return o;
-               // }
+        //System.out.println("No of blocks reachable:" + reachableObj.size());
+        for(ABObject o:blocksreal)
+        {
+            if(o.getShape()==ABShape.Circle)
+            {
+                return o;
+            }
+
+        }
+        for(ABObject o:blocks){
+        //        if (o.getType()==ABType.Stone&&o.getShape()==ABShape.Circle) {
+        //            return o;
+        //        }
+            if(o.getType() == ABType.Stone)
+                continue;
             score=getHeuristicValue(o);
             //System.out.println(o);
            // System.out.println(score);
             if(score>max){
-                max=score;
-                target=o;
+                //if(isReachable(o.getCenter())!=3) {
+                    max = score;
+                    target = o;
+                //}
             }
         }
         System.out.println(max);
         return target;
     }
 
-
+    public static int gettraj(ABObject target){
+        if(isReachable(target.getCenter())==0)
+            return  0;
+        else return 1;
+    }
 
 }
