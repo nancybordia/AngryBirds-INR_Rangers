@@ -24,7 +24,9 @@ import ab.demo.other.Shot;
 import ab.planner.TrajectoryPlanner;
 import ab.utils.StateUtil;
 import ab.vision.ABObject;
+import ab.vision.ABType;
 import ab.vision.GameStateExtractor.GameState;
+import ab.vision.Heuristic;
 import ab.vision.Vision;
 
 
@@ -57,8 +59,8 @@ public class NaiveAgent implements Runnable {
 
 		aRobot.loadLevel(currentLevel);
 		while (true) {
-            if(currentLevel > 8)
-                System.exit(0);
+            //if(currentLevel > 8)
+                //System.exit(0);
 			GameState state = solve();
 			if (state == GameState.WON) {
 				try {
@@ -130,7 +132,7 @@ public class NaiveAgent implements Runnable {
 		Vision vision = new Vision(screenshot);
 
         //For Selecting the target object
-        SelectObject object = new SelectObject();
+        Heuristic object = new Heuristic();
 
         //For Selecting all the objects
 
@@ -175,11 +177,15 @@ public class NaiveAgent implements Runnable {
 
                     //Select a reachable object with high heuristic value
                     ABObject target = object.getTarget();
+                    //int i=object.gettraj(target);
 
                     //Select a target object
                     Point _tpt = target.getCenter();
-
-					//Point _tpt = pig.getCenter();// if the target is very close to before, randomly choose a
+                    if(aRobot.getBirdTypeOnSling()== ABType.YellowBird)
+                    {
+                        _tpt = target.getBottom();
+                    }
+                    					//Point _tpt = pig.getCenter();// if the target is very close to before, randomly choose a
 					// point near it
 					if (prevTarget != null && distance(prevTarget, _tpt) < 10) {
 						double _angle = randomGenerator.nextDouble() * Math.PI * 2;
@@ -192,12 +198,14 @@ public class NaiveAgent implements Runnable {
 
 					// estimate the trajectory
 					ArrayList<Point> pts = tp.estimateLaunchPoint(sling, _tpt);
-					
+
 					// do a high shot when entering a level to find an accurate velocity
 					if (pts.size() >= 1)    //Changed to >= from >
-					{
-						releasePoint = pts.get(0);  //Changed to 0 from 1
-					}
+					//{   if(i==0)
+						releasePoint = pts.get(0);
+						 // else
+						  //releasePoint=pts.get(1);  //Changed to 0 from 1
+				    	//}
 //					else if (pts.size() == 1)
 //						releasePoint = pts.get(0);
 //					else if (pts.size() == 2)
@@ -216,12 +224,12 @@ public class NaiveAgent implements Runnable {
 							System.out.println("Try a shot with 45 degree");
 							releasePoint = tp.findReleasePoint(sling, Math.PI/4);
 						}
-					
+
 					// Get the reference point
 					Point refPoint = tp.getReferencePoint(sling);
 
 
-					//Calculate the tapping time according the bird type 
+					//Calculate the tapping time according the bird type
 					if (releasePoint != null) {
 						double releaseAngle = tp.getReleaseAngle(sling,
 								releasePoint);
@@ -229,7 +237,7 @@ public class NaiveAgent implements Runnable {
 						System.out.println(pts.size() + "Release Angle: "
 								+ Math.toDegrees(releaseAngle));
 						int tapInterval = 0;
-						switch (aRobot.getBirdTypeOnSling()) 
+						switch (aRobot.getBirdTypeOnSling())
 						{
 
 						case RedBird:
