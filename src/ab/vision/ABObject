@@ -38,7 +38,8 @@ public class ABObject extends Rectangle {
         return false;
     }
 
-public ABObject(Rectangle mbr, ABType type) {
+
+    public ABObject(Rectangle mbr, ABType type) {
 	super(mbr);
 	this.type = type;
 	this.id = counter++;
@@ -53,6 +54,7 @@ public ABObject(ABObject ab)
 	super(ab.getBounds());
 	this.type = ab.type;
 	this.id = ab.id;
+    this.shape=ab.shape;
 }
 public ABObject()
 {
@@ -63,6 +65,7 @@ public ABType getType()
 {
 	return type;
 }
+public ABShape getShape(){return shape;}
 
 public Point getCenter() {
    return new Point((int)getCenterX(), (int)getCenterY());
@@ -70,6 +73,7 @@ public Point getCenter() {
 public Point getTop() {
     return new Point((int)getCenterX(), (int)getMinY());
 }
+    public Point getBottom(){return new Point((int)getCenterX(), (int)getMaxY());}
 
 public static void resetCounter() {
 	counter = 0;	
