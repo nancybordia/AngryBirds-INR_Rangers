@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 /**
- * Created by Jeet on 28-09-2014.
+ * Created by Nancy on 28-09-2014.
  */
 public class SelectObject {
     public List<ABObject> getReachableObjects()
