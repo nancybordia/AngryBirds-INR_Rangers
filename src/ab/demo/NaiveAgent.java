@@ -181,10 +181,11 @@ public class NaiveAgent implements Runnable {
 
                     //Select a target object
                     Point _tpt = target.getCenter();
-                    if(aRobot.getBirdTypeOnSling()== ABType.YellowBird)
-                    {
-                        _tpt = target.getBottom();
-                    }
+                  if(aRobot.getBirdTypeOnSling()== ABType.YellowBird)
+                   {
+                       _tpt.x -= 1;
+                       _tpt.y += 1;
+                   }
                     					//Point _tpt = pig.getCenter();// if the target is very close to before, randomly choose a
 					// point near it
 					if (prevTarget != null && distance(prevTarget, _tpt) < 10) {
@@ -240,10 +241,10 @@ public class NaiveAgent implements Runnable {
 						switch (aRobot.getBirdTypeOnSling())
 						{
 
-						case RedBird:
+				    		case RedBird:
 							tapInterval = 0; break;               // start of trajectory
 						case YellowBird:
-							tapInterval = 65 + randomGenerator.nextInt(25);break; // 65-90% of the way
+							tapInterval = 65 + randomGenerator.nextInt(20) ;break; // 65-90% of the way
 						case WhiteBird:
 							tapInterval =  70 + randomGenerator.nextInt(20);break; // 70-90% of the way
 						case BlackBird:
