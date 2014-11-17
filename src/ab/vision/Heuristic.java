@@ -25,14 +25,14 @@ public class Heuristic {
         List<ABObject> shelter=new ArrayList<ABObject>();
         for (int i=0;i<list.length;i++){
             if(Stability.isLeftShelter(list[i],pig))
-               left.add(list[i]);
+                left.add(list[i]);
             else if(Stability.isRightShelter(list[i],pig))
                 right.add(list[i]);
         }
         //getClosestLeft(left,true);
         //getClosestRight(right,false);
 
-    return shelter;
+        return shelter;
     }
 
     public static List<ABObject> getLeftObjects(ABObject o,List<ABObject> obj) {
@@ -45,22 +45,22 @@ public class Heuristic {
     }
 
     public static List<ABObject> getRightObjects(ABObject o, List<ABObject> obj)
-        {
-            List<ABObject> right = new ArrayList<ABObject>();
-            for (ABObject o1:obj) {
-                if (Stability.isRightShelter(o1, o))
-                    right.add(o1);
-            }
-            return right;
+    {
+        List<ABObject> right = new ArrayList<ABObject>();
+        for (ABObject o1:obj) {
+            if (Stability.isRightShelter(o1, o))
+                right.add(o1);
         }
+        return right;
+    }
 
     //List <ABObject> getAffected(ABObject obj)
     //{
 
     //}
-   public static List<ABObject> getSupporters(ABObject x , List<ABObject> obj){
+    public static List<ABObject> getSupporters(ABObject x , List<ABObject> obj){
         List<ABObject> supporters=new ArrayList<ABObject>();
-     //  supporters.add(x);
+        //  supporters.add(x);
         for (ABObject y:obj) {
             if (isSupport(x, y)) {
                 supporters.add(y);
@@ -69,12 +69,12 @@ public class Heuristic {
             if(isAngularSupport(x,y))
                 supporters.add(y);
         }
-            return supporters;
+        return supporters;
     }
 
     public static List<ABObject> getSupportees(ABObject x , List<ABObject> obj){
         List<ABObject> supportees=new ArrayList<ABObject>();
-       // supportees.add(x);
+        // supportees.add(x);
         for (ABObject y:obj) {
             if (isSupport(y, x)) {
                 supportees.add(y);
@@ -89,7 +89,7 @@ public class Heuristic {
 
 
     public static boolean isSupport(ABObject a,ABObject b){
-       Algebra algebra=new Algebra();
+        Algebra algebra=new Algebra();
         if((algebra.isLd(a, b)||algebra.isCd(a, b)||algebra.isRd(a, b)||algebra.isLdi(a, b)||algebra.isCdi(a, b)||algebra.isRdi(a, b)||algebra.isMom(a, b)||algebra.isMol(a,b)||algebra.isLom(a, b)||algebra.isLol(a, b)||algebra.isMomi(a, b)||algebra.isMoli(a,b)||algebra.isLomi(a, b)||algebra.isLoli(a, b)||algebra.isMs(a, b)||algebra.isLs(a, b)||algebra.isMsi(a, b)||algebra.isLsi(a, b)||algebra.isMf(a, b)||algebra.isLf(a, b)||algebra.isMfi(a, b)||algebra.isLfi(a, b)||algebra.isEq(a, b))&&algebra.isM(a, b))
             return true;
         else return false;
@@ -148,7 +148,7 @@ public class Heuristic {
         List<ABObject> directSupportees=getSupportees(x, obj);
         List<ABObject> allsupportees= new ArrayList<ABObject>();
         if(!allsupportees.containsAll(directSupportees))
-        allsupportees.addAll(directSupportees);
+            allsupportees.addAll(directSupportees);
         for(ABObject o:directSupportees){
             getallSupportees(o,obj);
             //getallSupporters(o,obj);
@@ -163,7 +163,7 @@ public class Heuristic {
             allsupporters.addAll(directSupporters);
         for(ABObject o:directSupporters){
             getallSupporters(o,obj);
-           // getallSupportees(o,obj);
+            // getallSupportees(o,obj);
         }
         return allsupporters;
     }
@@ -173,7 +173,12 @@ public class Heuristic {
         List<ABObject> neighbours=new ArrayList<ABObject>();
         List<ABObject> left=getLeftObjects(x,obj);
         List<ABObject> right=getRightObjects(x,obj);
-       // neighbours.addAll(getClosestLeft(left));
+
+        neighbours.addAll(getClosestLeft(left));
+
+        // neighbours.addAll(getClosestLeft(left));
+
+
         neighbours.addAll(getClosestRight(right));
         return neighbours;
     }
@@ -193,14 +198,14 @@ public class Heuristic {
                     {
                         if ((algebra.isB(y,z)||algebra.isLd(y,z)||algebra.isCd(y,z)||algebra.isRd(y,z)||algebra.isMom(y,z)||algebra.isMol(y,z)||algebra.isLom(y,z)||algebra.isLol(y,z)||algebra.isM(y,z)||algebra.isLs(y,z)||algebra.isMs(y,z))&&(algebra.isB(y,z) || algebra.isA(y,z) || algebra.isM(y,z) || algebra.isMi(y,z) || algebra.isMom(y,z) || algebra.isMomi(y,z) || algebra.isLol(y,z) || algebra.isLoli(y,z) || algebra.isMol(y,z) || algebra.isMoli(y,z) || algebra.isLom(y,z) || algebra.isLomi(y,z) || algebra.isMs(y,z) || algebra.isMsi(y,z) || algebra.isLs(y,z)) || algebra.isLsi(y,z) || algebra.isLd(y,z) || algebra.isLdi(y,z) || algebra.isRd(y,z) || algebra.isRdi(y,z) || algebra.isCd(y,z) || algebra.isCdi(y,z) || algebra.isMf(y,z) || algebra.isMfi(y,z) || algebra.isLf(y,z) || algebra.isLfi(y,z) || algebra.isEq(y,z))
                         {
-                                //System.out.println("delete " + y.id + " remain " + z.id);
-                                removedList.add(y);
-                            }
-                        else if ((algebra.isB(y,z)||algebra.isLd(y,z)||algebra.isCd(y,z)||algebra.isRd(y,z)||algebra.isMom(y,z)||algebra.isMol(y,z)||algebra.isLom(y,z)||algebra.isLol(y,z)||algebra.isM(y,z)||algebra.isLs(y,z)||algebra.isMs(y,z))&&(algebra.isB(y,z) || algebra.isA(y,z) || algebra.isM(y,z) || algebra.isMi(y,z) || algebra.isMom(y,z) || algebra.isMomi(y,z) || algebra.isLol(y,z) || algebra.isLoli(y,z) || algebra.isMol(y,z) || algebra.isMoli(y,z) || algebra.isLom(y,z) || algebra.isLomi(y,z) || algebra.isMs(y,z) || algebra.isMsi(y,z) || algebra.isLs(y,z)) || algebra.isLsi(y,z) || algebra.isLd(y,z) || algebra.isLdi(y,z) || algebra.isRd(y,z) || algebra.isRdi(y,z) || algebra.isCd(y,z) || algebra.isCdi(y,z) || algebra.isMf(y,z) || algebra.isMfi(y,z) || algebra.isLf(y,z) || algebra.isLfi(y,z) || algebra.isEq(y,z))
-                        {
-                                //System.out.println("delete " + z.id + " remain " + y.id);
-                                removedList.add(z);
-                            }
+                            //System.out.println("delete " + y.id + " remain " + z.id);
+                            removedList.add(y);
+                        }
+                       // else if ((algebra.isB(y,z)||algebra.isLd(y,z)||algebra.isCd(y,z)||algebra.isRd(y,z)||algebra.isMom(y,z)||algebra.isMol(y,z)||algebra.isLom(y,z)||algebra.isLol(y,z)||algebra.isM(y,z)||algebra.isLs(y,z)||algebra.isMs(y,z))&&(algebra.isB(y,z) || algebra.isA(y,z) || algebra.isM(y,z) || algebra.isMi(y,z) || algebra.isMom(y,z) || algebra.isMomi(y,z) || algebra.isLol(y,z) || algebra.isLoli(y,z) || algebra.isMol(y,z) || algebra.isMoli(y,z) || algebra.isLom(y,z) || algebra.isLomi(y,z) || algebra.isMs(y,z) || algebra.isMsi(y,z) || algebra.isLs(y,z)) || algebra.isLsi(y,z) || algebra.isLd(y,z) || algebra.isLdi(y,z) || algebra.isRd(y,z) || algebra.isRdi(y,z) || algebra.isCd(y,z) || algebra.isCdi(y,z) || algebra.isMf(y,z) || algebra.isMfi(y,z) || algebra.isLf(y,z) || algebra.isLfi(y,z) || algebra.isEq(y,z))
+                        //{
+                            //System.out.println("delete " + z.id + " remain " + y.id);
+                          //  removedList.add(z);
+                        //}
 
                     }
                 }
@@ -242,11 +247,11 @@ public class Heuristic {
                             //System.out.println("delete " + y.id + " remain " + z.id);
                             removedList.add(z);
                         }
-                        else if ((algebra.isB(y,z)||algebra.isLd(y,z)||algebra.isCd(y,z)||algebra.isRd(y,z)||algebra.isMom(y,z)||algebra.isMol(y,z)||algebra.isLom(y,z)||algebra.isLol(y,z)||algebra.isM(y,z)||algebra.isLs(y,z)||algebra.isMs(y,z))&&(algebra.isB(y,z) || algebra.isA(y,z) || algebra.isM(y,z) || algebra.isMi(y,z) || algebra.isMom(y,z) || algebra.isMomi(y,z) || algebra.isLol(y,z) || algebra.isLoli(y,z) || algebra.isMol(y,z) || algebra.isMoli(y,z) || algebra.isLom(y,z) || algebra.isLomi(y,z) || algebra.isMs(y,z) || algebra.isMsi(y,z) || algebra.isLs(y,z)) || algebra.isLsi(y,z) || algebra.isLd(y,z) || algebra.isLdi(y,z) || algebra.isRd(y,z) || algebra.isRdi(y,z) || algebra.isCd(y,z) || algebra.isCdi(y,z) || algebra.isMf(y,z) || algebra.isMfi(y,z) || algebra.isLf(y,z) || algebra.isLfi(y,z) || algebra.isEq(y,z))
-                        {
+                       // else if ((algebra.isB(y,z)||algebra.isLd(y,z)||algebra.isCd(y,z)||algebra.isRd(y,z)||algebra.isMom(y,z)||algebra.isMol(y,z)||algebra.isLom(y,z)||algebra.isLol(y,z)||algebra.isM(y,z)||algebra.isLs(y,z)||algebra.isMs(y,z))&&(algebra.isB(y,z) || algebra.isA(y,z) || algebra.isM(y,z) || algebra.isMi(y,z) || algebra.isMom(y,z) || algebra.isMomi(y,z) || algebra.isLol(y,z) || algebra.isLoli(y,z) || algebra.isMol(y,z) || algebra.isMoli(y,z) || algebra.isLom(y,z) || algebra.isLomi(y,z) || algebra.isMs(y,z) || algebra.isMsi(y,z) || algebra.isLs(y,z)) || algebra.isLsi(y,z) || algebra.isLd(y,z) || algebra.isLdi(y,z) || algebra.isRd(y,z) || algebra.isRdi(y,z) || algebra.isCd(y,z) || algebra.isCdi(y,z) || algebra.isMf(y,z) || algebra.isMfi(y,z) || algebra.isLf(y,z) || algebra.isLfi(y,z) || algebra.isEq(y,z))
+                        //{
                             //System.out.println("delete " + z.id + " remain " + y.id);
-                            removedList.add(y);
-                        }
+                         //   removedList.add(y);
+                        //}
 
                     }
                 }
@@ -326,8 +331,8 @@ public class Heuristic {
         return 3;
     }
 
-   // public static boolean isReachable(Vision vision,Point target,Shot shot){
-       // System.out.println("hi");
+    // public static boolean isReachable(Vision vision,Point target,Shot shot){
+    // System.out.println("hi");
       /*  TrajectoryPlanner tp = new TrajectoryPlanner();
         Point releasePoint = new Point(shot.getX()+shot.getDx(),shot.getY()+shot.getDy());
         int trajY=tp.getYCoordinate(vision.findSlingshotMBR(),releasePoint,target.x);
@@ -383,13 +388,25 @@ public class Heuristic {
         }
         return h;
     }
-    public static ABObject getTarget(){
-        int score,max=0;
-        ABObject target=new ABObject();
+    public static ABObject getTarget() {
+
+        SelectObject reachable = new SelectObject();
+        List<ABObject> reachObj = reachable.reachable();
+
+        int score, max = 0;
+        ABObject target = new ABObject();
         BufferedImage screenshot = ActionRobot.doScreenShot();
         Vision vision = new Vision(screenshot);
-        List<ABObject> blocksreal=vision.findBlocksRealShape();
-        List<ABObject> blocks=vision.findBlocksMBR();
+        List<ABObject> blocksreal = vision.findBlocksRealShape();
+        List<ABObject> blocks = vision.findBlocksMBR();
+
+        List<ABObject> pigs = vision.findPigsMBR();
+        List<ABObject> allobj = new ArrayList<ABObject>();
+        allobj.addAll(blocks);
+        allobj.addAll(pigs);
+
+
+
 //        for (ABObject o:blocks)
 //        {
 //            if (o.getType() == ABType.Stone)
@@ -398,47 +415,107 @@ public class Heuristic {
         //for(ABObject t:blocks)
         //System.out.println("object id: "+t.id+" object type : "+t.type+" object shape : "+t.shape );
         //System.out.println("No. of blocks:"+blocks.size());
-        Shot shot=new Shot();
+        Shot shot = new Shot();
         //SelectObject reachable=new SelectObject();
         //List<ABObject> reachableObj=getReachable();
-       // for(ABObject t:reachableObj)
+        // for(ABObject t:reachableObj)
         //System.out.println("reachable:" +reachableObj.size() );
 
         //List<ABObject> reachable=new ArrayList<ABObject>();
-       // for(ABObject o:blocks){
-         //   Point target1=o.getCenter();
-         //   Point target2=o.getTop();
-          //  if(isReachable(vision,target1,shot)){
-           //   reachable.add(o);
-           // }
+        // for(ABObject o:blocks){
+        //   Point target1=o.getCenter();
+        //   Point target2=o.getTop();
+        //  if(isReachable(vision,target1,shot)){
+        //   reachable.add(o);
+        // }
         //}
         //System.out.println("No of blocks reachable:" + reachableObj.size());
-        for(ABObject o:blocksreal)
-        {
-            if(o.getShape()==ABShape.Circle)
-            {
-                return o;
+        ActionRobot arobot=new ActionRobot();
+        if (arobot.getBirdTypeOnSling()==ABType.YellowBird) {
+            double mx = 0;
+            for (ABObject o : reachObj) {
+                if (o.getType() == ABType.Wood) {
+                    if (getHeuristicValue(o) > 10) {
+                        if (o.getMinY() > mx) {
+                            mx = o.getMinY();
+                            target = o;
+                        }
+                    }
+                }
+            }
+            if (target==null){
+                for (ABObject o : reachObj) {
+
+                    // for (ABObject o : blocks) {
+
+                    //        if (o.getType()==ABType.Stone&&o.getShape()==ABShape.Circle) {
+                    //            return o;
+                    //        }
+                    if (o.getType() == ABType.Stone)
+                        continue;
+                    score = getHeuristicValue(o);
+
+                    //List<ABObject> neighbour = getNeighbours(o, allobj);
+                    // System.out.println("score:" + score + " neighbour:" + neighbour.size());
+
+                    //System.out.println(o);
+                    // System.out.println(score);
+                    if (score > max) {
+                        //if(isReachable(o.getCenter())!=3) {
+                        max = score;
+                        target = o;
+                        //}
+                    }
+                }
+
             }
 
         }
-        for(ABObject o:blocks){
-        //        if (o.getType()==ABType.Stone&&o.getShape()==ABShape.Circle) {
-        //            return o;
-        //        }
-            if(o.getType() == ABType.Stone)
-                continue;
-            score=getHeuristicValue(o);
-            //System.out.println(o);
-           // System.out.println(score);
-            if(score>max){
-                //if(isReachable(o.getCenter())!=3) {
+
+
+        //      }
+        //       return target;
+
+
+        else {
+            for (ABObject o : blocksreal) {
+                if (o.getShape() == ABShape.Circle) {
+                    // blocksreal.remove(o);
+                    return o;
+
+                }
+
+            }
+
+            for (ABObject o : reachObj) {
+
+                // for (ABObject o : blocks) {
+
+                //        if (o.getType()==ABType.Stone&&o.getShape()==ABShape.Circle) {
+                //            return o;
+                //        }
+                if (o.getType() == ABType.Stone)
+                    continue;
+                score = getHeuristicValue(o);
+
+                //List<ABObject> neighbour = getNeighbours(o, allobj);
+                // System.out.println("score:" + score + " neighbour:" + neighbour.size());
+
+                //System.out.println(o);
+                // System.out.println(score);
+                if (score > max) {
+                    //if(isReachable(o.getCenter())!=3) {
                     max = score;
                     target = o;
-                //}
+                    //}
+                }
             }
+            System.out.println(max);
         }
-        System.out.println(max);
-        return target;
+
+            return target;
+  //      }
+ //       return target;
     }
 
     public static int gettraj(ABObject target){
