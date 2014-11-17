@@ -1,55 +1,100 @@
 package ab.demo.other;
 
 import java.awt.Rectangle;
+
+
+import ab.planner.TrajectoryPlanner;
 import ab.vision.ABObject;
 import ab.vision.Algebra;
+import ab.vision.Heuristic;
 import ab.vision.Vision;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 /**
- * Created by Nancy on 28-09-2014.
+ * Created by Jeet on 28-09-2014.
  */
 public class SelectObject {
-    public List<ABObject> getReachableObjects()
-    {
+    Heuristic heuristic = new Heuristic();
+
+
+
+
+    public List<ABObject> reachable(){
         BufferedImage screenshot = ActionRobot.doScreenShot();
         Vision vision = new Vision(screenshot);
-        Algebra algebra = new Algebra();
-        List<ABObject> blocks = vision.findBlocksMBR();
-        System.out.println("No of blocks:" + blocks.size());
-        List<ABObject> reachableObjects=new LinkedList<ABObject>();
+        // Algebra algebra = new Algebra();
+        List<ABObject> _block = vision.findBlocksMBR();
+        List<ABObject> _pigs=vision.findPigsMBR();
+        // List<ABObject> _pigs=vision.findPigsMBR();
+        // List<ABObject> _wood=vision.findWoodMBR();
+        // List<ABObject> _pigs=vision.findPigsMBR();
+        List<ABObject> blocks=new ArrayList<ABObject>();
+        //blocks.addAll(block);
+        //blocks.addAll(pigs);
 
-        //Formula
-        for (int i = 0; i < blocks.size(); i++) {
-            int x=0;
-            for (int j = 0; j < blocks.size(); j++) {
-                if(
-                        (i!=j)&&((algebra.isB(blocks.get(i), blocks.get(j)) || algebra.isLdi(blocks.get(i), blocks.get(j)) || algebra.isCdi(blocks.get(i), blocks.get(j)) || algebra.isRdi(blocks.get(i), blocks.get(j)) || algebra.isMom(blocks.get(i), blocks.get(j)) || algebra.isLom(blocks.get(i), blocks.get(j)) || algebra.isLol(blocks.get(i), blocks.get(j)) || algebra.isMoli(blocks.get(i), blocks.get(j)) || algebra.isMomi(blocks.get(i), blocks.get(j)) || algebra.isM(blocks.get(i), blocks.get(j)) || algebra.isMs(blocks.get(i), blocks.get(j)) || algebra.isLs(blocks.get(i), blocks.get(j)) || algebra.isMsi(blocks.get(i), blocks.get(j)) || algebra.isLsi(blocks.get(i), blocks.get(j)) || algebra.isMfi(blocks.get(i), blocks.get(j)) || algebra.isLfi(blocks.get(i), blocks.get(j)) || algebra.isEq(blocks.get(i), blocks.get(j)))&&( algebra.isB(blocks.get(i), blocks.get(j)) || algebra.isA(blocks.get(i), blocks.get(j)) || algebra.isM(blocks.get(i), blocks.get(j)) || algebra.isMi(blocks.get(i), blocks.get(j)) || algebra.isMom(blocks.get(i), blocks.get(j)) || algebra.isMomi(blocks.get(i), blocks.get(j)) || algebra.isLol(blocks.get(i), blocks.get(j)) || algebra.isLoli(blocks.get(i), blocks.get(j)) || algebra.isMol(blocks.get(i), blocks.get(j)) || algebra.isMoli(blocks.get(i), blocks.get(j)) || algebra.isLom(blocks.get(i), blocks.get(j)) || algebra.isLomi(blocks.get(i), blocks.get(j)) || algebra.isMs(blocks.get(i), blocks.get(j)) || algebra.isMsi(blocks.get(i), blocks.get(j)) || algebra.isLs(blocks.get(i), blocks.get(j)) || algebra.isLsi(blocks.get(i), blocks.get(j)) || algebra.isLd(blocks.get(i), blocks.get(j)) || algebra.isLdi(blocks.get(i), blocks.get(j)) || algebra.isRd(blocks.get(i), blocks.get(j)) || algebra.isRdi(blocks.get(i), blocks.get(j)) || algebra.isCd(blocks.get(i), blocks.get(j)) || algebra.isCdi(blocks.get(i), blocks.get(j)) || algebra.isMf(blocks.get(i), blocks.get(j)) || algebra.isMfi(blocks.get(i), blocks.get(j)) || algebra.isLf(blocks.get(i), blocks.get(j)) || algebra.isLfi(blocks.get(i), blocks.get(j)) || algebra.isEq(blocks.get(i), blocks.get(j)))) ||
-                                ((algebra.isA(blocks.get(i), blocks.get(j))||algebra.isLd(blocks.get(i), blocks.get(j))||algebra.isCd(blocks.get(i), blocks.get(j))||algebra.isRd(blocks.get(i), blocks.get(j))||algebra.isLomi(blocks.get(i), blocks.get(j))||algebra.isLoli(blocks.get(i), blocks.get(j))||algebra.isMi(blocks.get(i), blocks.get(j))||algebra.isMf(blocks.get(i), blocks.get(j))||algebra.isLf(blocks.get(i), blocks.get(j))) &&(algebra.isA(blocks.get(i), blocks.get(j))||algebra.isB(blocks.get(i), blocks.get(j))||algebra.isM(blocks.get(i), blocks.get(j))||algebra.isMi(blocks.get(i), blocks.get(j))||algebra.isMom(blocks.get(i), blocks.get(j))||algebra.isMol(blocks.get(i), blocks.get(j))||algebra.isLom(blocks.get(i), blocks.get(j))||algebra.isLol(blocks.get(i), blocks.get(j))||algebra.isMomi(blocks.get(i), blocks.get(j))||algebra.isMoli(blocks.get(i), blocks.get(j))||algebra.isLomi(blocks.get(i), blocks.get(j))||algebra.isLoli(blocks.get(i), blocks.get(j))||algebra.isLdi(blocks.get(i), blocks.get(j))||algebra.isCdi(blocks.get(i), blocks.get(j))||algebra.isRdi(blocks.get(i), blocks.get(j))||algebra.isMsi(blocks.get(i), blocks.get(j))||algebra.isLsi(blocks.get(i), blocks.get(j))||algebra.isMfi(blocks.get(i), blocks.get(j))||algebra.isLfi(blocks.get(i), blocks.get(j))))
+        ArrayList<ABObject> allRect = new ArrayList<ABObject>(0);
+        if(_pigs != null)
+            allRect.addAll(_pigs);
+        //if(_wood != null)
+        // allRect.addAll(_wood);
+        // if(_ice != null)
+        //   allRect.addAll(_ice);
+        if(_block != null)
+            allRect.addAll(_block);
 
-                        )
-                   x++;
-
-
-
-
+        ArrayList<ABObject> result = new ArrayList<ABObject>(0);
+        for(ABObject r: allRect)
+        {
+            ArrayList<Point2D.Double> points = new ArrayList<Point2D.Double>(0);
+            for(int i=1;i<=30;i++)
+            {
+                Point2D.Double point = new Point2D.Double(r.getX()-i,r.getY()+(r.height/2));
+                points.add(point);
             }
-                if(x==blocks.size()-1)
-                    reachableObjects.add(blocks.get(i));
+            for(int i=1;i<=30;i++)
+            {
+                Point2D.Double point = new Point2D.Double(r.getX()-30,r.getY()+i);
+                points.add(point);
+            }
 
+            boolean inside = false;
+            for(Rectangle s: allRect)
+            {
+                boolean temp = false;
+                for(Point2D p:points)
+                {
+                    if(s.contains(p))
+                    {
+                        temp = true;
+                        break;
+                    }
+                    else
+                        temp = false;
+                }
+
+                if(temp)
+                {
+                    inside = false;
+                    break;
+                }
+                else
+                    inside = true;
+            }
+
+            if(inside)
+                result.add(r);
         }
-        System.out.println("No of blocks reachable:" + reachableObjects.size());
-        return reachableObjects;
-    }
+        //return findConnectedOuterBlocks(allRect);
+        result.addAll(_pigs);
 
-    public ABObject getTarget()
-    {
-        SelectObject obj = new SelectObject();
-        List<ABObject> reachableObjectList = obj.getReachableObjects();
+        System.out.println("reachable:"+result.size());
+        return result;
 
-        return reachableObjectList.get(0);
+
     }
 }
