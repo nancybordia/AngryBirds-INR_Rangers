@@ -1,0 +1,43 @@
+Flow of code
+•	In class NaiveAgent, solve() is called.
+•	We create object of class vision.Heuristic
+•	Method object.getTarget() is called.
+•	getTarget()
+Object Reachable of class demo.other.SelectObject is created
+Reachable.reachable() is called and list reachObj is returned
+Two lists are created:
+•	Blocks with real shape
+•	BlocksMBR
+For yellow birds
+•	Compare all reachable objects o of type wood with getHeuristicValue(o)>10 and return target with MaxY i.e. bottom most wood
+•	If no wood is reachable, compare heuristic value of all reachable objects and return one with highest.
+For birds other than yellow
+•	First see if there is any real block with shape as circle, return it
+•	Else for all reachObj, call getHeuristicValue() and block with highest score is returned as target.
+
+
+•	getHeuristicValue()
+    	create list of affectedObjects
+    	call getallSupporters(),addAll to affectedObjects
+    	call getallSupportees(),addAll to affectedObjects
+    	call getNeighbours() with affectedObjects as parameter,addAll to affectedObjects
+    	for all affectedObejcts:  if it is pig do +10, else do +1 and return score 
+
+
+•	getallSupporters()
+    	getSupporters()			
+      	isSupport()		//get direct supporters
+      	isAngularSupport()	//get angular supporters
+        •	Stability.CheckLineEquation()	//checks if two blocks intersect
+•	getallSupportees()
+   o	getSupportees()
+     	isSupport()
+     	isAngularSupport()
+        •	Stability.CheckLineEquation()
+•	getNeighbours()
+  	getLeftObjects()
+    •	vision.Stability.isLeftShelter()
+  	getRightObjects()
+    •	vision.Stability.isRightShelter()
+  	getClosestLeft()
+  	getClosestRight()
